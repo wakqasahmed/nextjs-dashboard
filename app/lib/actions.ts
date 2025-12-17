@@ -39,16 +39,25 @@ export async function authenticate(
   formData: FormData,
 ) {
   try {
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    console.log('Authentication request:', { email, passwordLength: password?.length });
+    
     await signIn('credentials', formData);
+    console.log('Sign-in successful');
   } catch (error) {
+    console.error('Authentication error:', error);
     if (error instanceof AuthError) {
       switch (error.type) {
         case 'CredentialsSignin':
+          console.log('CredentialsSignin error');
           return 'Invalid credentials.';
         default:
+          console.log('Unknown AuthError type:', error.type);
           return 'Something went wrong.';
       }
     }
+    console.log('Non-AuthError thrown:', error);
     throw error;
   }
 }
